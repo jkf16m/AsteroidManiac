@@ -3,15 +3,9 @@ using System;
 
 
 public delegate void DamageDelegate(int amount, int health);
-public struct HealthProps{
-    public int value;
-    public int maxHealth;
 
-    public DamageDelegate OnDamage;
-    public Action OnNoHealth;
-}
 
-public class Health : Node, IInitialize<HealthProps>
+public class Health : Node
 {
     [Export]
     public int Value {get; private set;}
@@ -20,14 +14,19 @@ public class Health : Node, IInitialize<HealthProps>
 
 
     private DamageDelegate OnDamage;
-    private Action OnNoHealth;
+    private Action<Node> OnNoHealth;
 
-    public void Initialize(HealthProps props)
+    public void Initialize(
+        int? maxHealth = null,
+        int? value = null,
+        DamageDelegate onDamage = null,
+        Action<Node> onNoHealth = null
+    )
     {
-        Value = props.value ?? Value;
-        MaxHealth = props.maxHealth ?? MaxHealth;
-        OnDamage = props.OnDamage;
-        OnNoHealth = props.OnNoHealth;
+        Value = value ?? Value;
+        MaxHealth = maxHealth ?? MaxHealth;
+        OnDamage = onDamage;
+        OnNoHealth = onNoHealth;
     }
 
     // Declare member variables here. Examples:
@@ -42,7 +41,7 @@ public class Health : Node, IInitialize<HealthProps>
     public void Damage(int amount){
         Value -= amount;
         if(Value <= 0){
-            this.OnNoHealth?.Invoke();
+            this.OnNoHealth?.Invoke(this.GetParent());
         }
 
         this.OnDamage?.Invoke(amount, Value);

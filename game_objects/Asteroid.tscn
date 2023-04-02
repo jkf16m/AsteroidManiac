@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://game_objects/Damage.tscn" type="PackedScene" id=1]
+[ext_resource path="res://game_objects/Health.tscn" type="PackedScene" id=2]
+[ext_resource path="res://game_objects/Asteroid.cs" type="Script" id=3]
+[ext_resource path="res://game_objects/KinematicBody2DBehaviour.tscn" type="PackedScene" id=4]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 8.0
+
+[node name="Asteroid" type="KinematicBody2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+
+[node name="Health" parent="." instance=ExtResource( 2 )]
+Value = 100
+MaxHealth = 100
+
+[node name="Damage" parent="." instance=ExtResource( 1 )]
+Value = 30
+
+[node name="KinematicBody2DBehaviour" parent="." instance=ExtResource( 4 )]
+KinematicBody2DPath = NodePath("..")
