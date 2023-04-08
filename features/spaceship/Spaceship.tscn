@@ -1,10 +1,10 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://game_objects/Spaceship.cs" type="Script" id=1]
-[ext_resource path="res://game_objects/Health.tscn" type="PackedScene" id=2]
-[ext_resource path="res://game_objects/Area2DBehaviour.tscn" type="PackedScene" id=3]
-[ext_resource path="res://game_objects/Bullet.tscn" type="PackedScene" id=4]
-[ext_resource path="res://game_objects/Shooter.tscn" type="PackedScene" id=5]
+[ext_resource path="res://features/spaceship/Spaceship.cs" type="Script" id=1]
+[ext_resource path="res://shared/components/Health.tscn" type="PackedScene" id=2]
+[ext_resource path="res://shared/components/Area2DBehaviour.tscn" type="PackedScene" id=3]
+[ext_resource path="res://features/bullet/Bullet.tscn" type="PackedScene" id=4]
+[ext_resource path="res://features/shooter/Shooter.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 12.0
@@ -12,7 +12,7 @@ radius = 12.0
 [sub_resource type="CircleShape2D" id=2]
 radius = 18.0
 
-[node name="Spaceship" type="KinematicBody2D"]
+[node name="Spaceship" type="RigidBody2D"]
 script = ExtResource( 1 )
 Speed = 160
 
