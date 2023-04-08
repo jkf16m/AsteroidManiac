@@ -4,6 +4,15 @@ using System;
 
 public delegate void DamageDelegate(int amount, int health);
 
+public class DamageArgs{
+    public int Amount {get; private set;}
+    public int Health {get; private set;}
+
+    public DamageArgs(int amount, int health){
+        this.Amount = amount;
+        this.Health = health;
+    }
+}
 
 public class Health : Node
 {
@@ -13,20 +22,16 @@ public class Health : Node
     public int MaxHealth {get; private set;}
 
 
-    private DamageDelegate OnDamage;
-    private Action<Node> OnNoHealth;
+    public event EventHandler<DamageArgs> OnDamage;
+    public event Action<Node> OnNoHealth;
 
     public void Initialize(
         int? maxHealth = null,
-        int? value = null,
-        DamageDelegate onDamage = null,
-        Action<Node> onNoHealth = null
+        int? value = null
     )
     {
         Value = value ?? Value;
         MaxHealth = maxHealth ?? MaxHealth;
-        OnDamage = onDamage;
-        OnNoHealth = onNoHealth;
     }
 
     // Declare member variables here. Examples:
@@ -41,9 +46,9 @@ public class Health : Node
     public void Damage(int amount){
         Value -= amount;
         if(Value <= 0){
-            this.OnNoHealth?.Invoke(this.GetParent());
+            this.OnNoHealth?.Invoke(this);
         }
 
-        this.OnDamage?.Invoke(amount, Value);
+        this.OnDamage?.Invoke(this, new DamageArgs(amount, Value));
     }
 }

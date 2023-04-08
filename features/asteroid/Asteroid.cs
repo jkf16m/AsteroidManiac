@@ -62,11 +62,9 @@ public class Asteroid : KinematicBody2D
 
 
         // Initialize the health
-        Health.Initialize(
-            onNoHealth: (node) =>{
-                QueueFree();
-            }
-        );
+        Health.OnNoHealth += (sender)=>{
+            QueueFree();
+        };
 
         // Initialize the collision behaviour
         KinematicBody2DBehaviour.Initialize(

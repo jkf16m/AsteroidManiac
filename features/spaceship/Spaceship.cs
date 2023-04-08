@@ -3,10 +3,6 @@ using System;
 using System.Collections.Generic;
 
 
-public struct SpaceshipActions{
-    public Action<Node> OnNoHealth {get; set;}
-    public Action<Bullet> OnShoot{get; set;}
-}
 
 /**
 <summary>
@@ -42,8 +38,9 @@ public class Spaceship : RigidBody2D
     // the difference with usual Signals or events, is that you can only assign them once,
     // with the Initialize method.
     // Reinitializations will replace the previous action.
-    public SpaceshipActions Actions {get; private set;}
 
+
+    public event Action<Bullet> OnShoot;
 
 
     // COMPONENTS
@@ -59,43 +56,6 @@ public class Spaceship : RigidBody2D
     }
 
     
-
-    /**
-    <summary>
-        Initialize the spaceship with the given actions.
-        If an action is not defined, it will be set to the default action.
-        This initialization method is used in godot because you cannot call the constructor
-        of a node when you instantiate it.
-
-        So, instead of calling the constructor, you call the Initialize method.
-
-        In this method, all the components references are already initialized (this method is usually invoked
-        after _Ready method)
-    </summary>
-    */
-    public void Initialize(SpaceshipActions actions)
-    {
-        Actions = actions;
-
-        Health.Initialize(
-            onDamage: (amount, value) => GD.Print("Damage: " + amount + " Health: " + value),
-            onNoHealth: Actions.OnNoHealth
-        );        
-
-
-
-        Area2DBehaviour.Initialize(new Area2DBehaviourProps{
-            behaviours = new Dictionary<string, Behaviour>{
-                {"danger", new Behaviour(
-                    onEnter: (area) => {
-                        var parent = area.GetParent<Node>();
-                        GD.Print("Enemy entered");
-                        Health.Damage(parent.GetNode<Damage>("Damage").Value);
-                    }
-                )}
-            }
-        });
-    }
 
 
     public override void _IntegrateForces(Physics2DDirectBodyState state)
@@ -131,7 +91,7 @@ public class Spaceship : RigidBody2D
             var bullet = GetNode<Shooter>("Shooter").Shoot(directionRadians);
 
             if(bullet != null)
-                Actions.OnShoot?.Invoke(bullet);
+                OnShoot?.Invoke(bullet);
         }
 
         this.ApplyCentralImpulse((direction.Normalized() * Speed)/100);

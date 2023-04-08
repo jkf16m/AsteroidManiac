@@ -12,16 +12,22 @@ public class room_1_player : Node
     {
         var spaceship = GetNode<Spaceship>("Spaceship");
 
-        spaceship.Initialize(
-            onNoHealth: (parent) => {
-                var ship = parent as Spaceship;
+        spaceship.Health.OnNoHealth += HandleNoHealth;
 
-                var destroyRemainings = ship.Destroy();
 
-                this.AddChild(destroyRemainings);
-            },
-            onShoot: (bullet) => AddChild(bullet)
-        );
+        spaceship.OnShoot += HandleShoot;
+    }
+
+    void HandleShoot(Bullet bullet){
+        AddChild(bullet);
+    }
+
+    void HandleNoHealth(Node sender){
+        var ship = sender.GetParent() as Spaceship;
+
+        var destroyRemainings = ship.Destroy();
+
+        this.AddChild(destroyRemainings);
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
