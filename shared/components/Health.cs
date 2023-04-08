@@ -43,7 +43,7 @@ public class Health : Node
     {
     }
 
-    public void Damage(int amount){
+    public void TakeDamage(int amount){
         Value -= amount;
         if(Value <= 0){
             this.NoHealthRemaining?.Invoke(this);

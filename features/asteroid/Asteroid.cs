@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Asteroid : KinematicBody2D
+public class Asteroid : KinematicBody2D, IDangerGroup
 {
     [Export]
     public float InnerRadius{get; private set;}
@@ -14,12 +14,15 @@ public class Asteroid : KinematicBody2D
     public Vector2 Velocity{get; private set;}
     [Export]
     public float RotationSpeed{get; private set;}
+    [Export]
+    public NodePath DamagePath{get; private set;}
 
 
     public CollisionShape2D CollisionShape2D{get; private set;}
     public Polygon2D Polygon2D{get; private set;}
     public Health Health{get; private set;}
     public KinematicBody2DBehaviour KinematicBody2DBehaviour{get; private set;}
+    public Damage Damage{get; private set;}
 
     public override void _Ready(){
         Initialize(
@@ -52,6 +55,7 @@ public class Asteroid : KinematicBody2D
         OuterRadius = outerRadius;
         VertexCount = vertexCount;
         Health = health ?? Health;
+        Damage = GetNode<Damage>(DamagePath);
         KinematicBody2DBehaviour = GetNode<KinematicBody2DBehaviour>("KinematicBody2DBehaviour");
 
 
@@ -73,7 +77,7 @@ public class Asteroid : KinematicBody2D
                     new CollisionBehaviour(
                         onCollision: (node) =>{
                             var damage = node.GetNode<Damage>("Damage");
-                            Health.Damage(damage.Value);
+                            Health.TakeDamage(damage.Value);
                         }
                     )
                 }

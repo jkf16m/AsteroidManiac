@@ -24,4 +24,14 @@ public static class NodeExtensions{
             node.AddChild(child);
         }
     }
+
+
+    /**
+    <summary>
+    This method returns a GroupNode with the given types.
+    </summary>
+    */
+    public static GroupNode<T, P> IntoGroupNode<T, P>(this T node, string groupName) where T : Node, P{
+        return new GroupNode<T, P>(node, groupName);
+    }
 }
