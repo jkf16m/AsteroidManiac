@@ -62,9 +62,8 @@ public class Asteroid : KinematicBody2D
 
 
         // Initialize the health
-        Health.OnNoHealth += (sender)=>{
-            QueueFree();
-        };
+        Health.NoHealthRemaining += OnNoHealthRemaining;
+         
 
         // Initialize the collision behaviour
         KinematicBody2DBehaviour.Initialize(
@@ -80,6 +79,9 @@ public class Asteroid : KinematicBody2D
                 }
             }
         );
+    }
+    private void OnNoHealthRemaining(Node node){
+        QueueFree();
     }
 
     public Vector2[] _GetPolygonPoints(){

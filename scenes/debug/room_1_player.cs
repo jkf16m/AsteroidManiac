@@ -12,17 +12,17 @@ public class room_1_player : Node
     {
         var spaceship = GetNode<Spaceship>("Spaceship");
 
-        spaceship.Health.OnNoHealth += HandleNoHealth;
+        spaceship.Health.NoHealthRemaining += OnNoHealthRemaining;
 
 
-        spaceship.OnShoot += HandleShoot;
+        spaceship.Shot += OnShot;
     }
 
-    void HandleShoot(Bullet bullet){
+    void OnShot(Bullet bullet){
         AddChild(bullet);
     }
 
-    void HandleNoHealth(Node sender){
+    void OnNoHealthRemaining(Node sender){
         var ship = sender.GetParent() as Spaceship;
 
         var destroyRemainings = ship.Destroy();

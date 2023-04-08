@@ -22,8 +22,8 @@ public class Health : Node
     public int MaxHealth {get; private set;}
 
 
-    public event EventHandler<DamageArgs> OnDamage;
-    public event Action<Node> OnNoHealth;
+    public event Action<DamageArgs> Damaged;
+    public event Action<Node> NoHealthRemaining;
 
     public void Initialize(
         int? maxHealth = null,
@@ -46,9 +46,9 @@ public class Health : Node
     public void Damage(int amount){
         Value -= amount;
         if(Value <= 0){
-            this.OnNoHealth?.Invoke(this);
+            this.NoHealthRemaining?.Invoke(this);
         }
 
-        this.OnDamage?.Invoke(this, new DamageArgs(amount, Value));
+        this.Damaged?.Invoke(new DamageArgs(amount, Value));
     }
 }

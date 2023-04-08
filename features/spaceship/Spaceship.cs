@@ -40,7 +40,7 @@ public class Spaceship : RigidBody2D
     // Reinitializations will replace the previous action.
 
 
-    public event Action<Bullet> OnShoot;
+    public event Action<Bullet> Shot;
 
 
     // COMPONENTS
@@ -91,7 +91,7 @@ public class Spaceship : RigidBody2D
             var bullet = GetNode<Shooter>("Shooter").Shoot(directionRadians);
 
             if(bullet != null)
-                OnShoot?.Invoke(bullet);
+                Shot?.Invoke(bullet);
         }
 
         this.ApplyCentralImpulse((direction.Normalized() * Speed)/100);
