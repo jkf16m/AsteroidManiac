@@ -1,10 +1,15 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://features/spaceship/Spaceship.cs" type="Script" id=1]
+[ext_resource path="res://shared/components/Health.tscn" type="PackedScene" id=2]
+[ext_resource path="res://shared/components/Health2DArea.tscn" type="PackedScene" id=3]
 [ext_resource path="res://features/bullet/Bullet.tscn" type="PackedScene" id=4]
 [ext_resource path="res://features/shooter/Shooter.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id=2]
 radius = 12.0
 
 [node name="Spaceship" type="RigidBody2D"]
@@ -29,3 +34,20 @@ BulletSpeed = 500.0
 ShootDelaySeconds = 0.1
 MaxBulletSpeedOnDistance = 500.0
 ArcOfFireDegrees = 15.0
+
+[node name="Health" parent="." instance=ExtResource( 2 )]
+__meta__ = {
+"_editor_description_": "Used to give the object a certain amount of health"
+}
+Value = 100
+MaxHealth = 100
+
+[node name="Health2DArea" parent="." instance=ExtResource( 3 )]
+Area2DPath = NodePath("../HealthCollisionArea2D")
+HealthPath = NodePath("../Health")
+GroupsToTakeDamageFrom = PoolStringArray( "danger" )
+
+[node name="HealthCollisionArea2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HealthCollisionArea2D"]
+shape = SubResource( 2 )

@@ -2,8 +2,18 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Asteroid : KinematicBody2D, IDangerGroup
+public struct AsteroidProps{
+    public float? InnerRadius;
+    public float? OuterRadius;
+    public int? VertexCount;
+    public Vector2? Velocity;
+    public float? RotationSpeed;
+}
+
+public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
 {
+    [Export]
+    public float DangerLevel{get; private set;}
     [Export]
     public float InnerRadius{get; private set;}
     [Export]
@@ -15,76 +25,89 @@ public class Asteroid : KinematicBody2D, IDangerGroup
     [Export]
     public float RotationSpeed{get; private set;}
     [Export]
-    public NodePath DamagePath{get; private set;}
+    public int Fragmentation{get; private set;}
 
 
     public CollisionShape2D CollisionShape2D{get; private set;}
     public Polygon2D Polygon2D{get; private set;}
     public Health Health{get; private set;}
-    public KinematicBody2DBehaviour KinematicBody2DBehaviour{get; private set;}
     public Damage Damage{get; private set;}
+    public Area2D HealthCollisionArea2D{get; private set;}
+
+
+    public delegate void FragmentatedDelegate(Asteroid destroyed, IEnumerable<Asteroid> fragments);
+    public event FragmentatedDelegate Fragmentated;
 
     public override void _Ready(){
         Initialize(
-            innerRadius: InnerRadius,
-            outerRadius: OuterRadius,
-            vertexCount: VertexCount,
-            velocity: Velocity,
-            collisionShape2D: GetNode<CollisionShape2D>("CollisionShape2D"),
-            polygon2D: GetNode<Polygon2D>("Polygon2D"),
-            health: GetNode<Health>("Health")
+            new AsteroidProps{
+                InnerRadius = InnerRadius,
+                OuterRadius = OuterRadius,
+                VertexCount = VertexCount,
+                Velocity = Velocity,
+                RotationSpeed = RotationSpeed
+            }
         );
+
     }
     
-    public void Initialize(
-        float innerRadius,
-        float outerRadius,
-        int vertexCount,
-        Vector2? velocity = null,
-        float? rotationSpeed = null,
-        CollisionShape2D collisionShape2D = null,
-        Polygon2D polygon2D = null,
-        Health health = null
-        )
+    public void Initialize( AsteroidProps p )
     {
-        CollisionShape2D = collisionShape2D ?? CollisionShape2D;
-        Polygon2D = polygon2D ?? Polygon2D;
-        Velocity = velocity ?? Velocity;
-        RotationSpeed = rotationSpeed ?? RotationSpeed;
-        InnerRadius = innerRadius;
-        OuterRadius = outerRadius;
-        VertexCount = vertexCount;
-        Health = health ?? Health;
-        Damage = GetNode<Damage>(DamagePath);
-        KinematicBody2DBehaviour = GetNode<KinematicBody2DBehaviour>("KinematicBody2DBehaviour");
-
+        Velocity = p.Velocity ?? Velocity;
+        RotationSpeed = p.RotationSpeed ?? RotationSpeed;
+        InnerRadius = p.InnerRadius ?? InnerRadius;
+        OuterRadius = p.OuterRadius ?? OuterRadius;
+        VertexCount = p.VertexCount ?? VertexCount;
+        Health = GetNode<Health>("Health");
+        Damage = GetNode<Damage>("Damage");
+        HealthCollisionArea2D = GetNode<Area2D>("HealthCollisionArea2D");
+        Polygon2D = GetNode<Polygon2D>("Polygon2D");
+        CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
 
         // Initialize the shape of the collision and the polygon
         var points = _GetPolygonPoints();
+
         CollisionShape2D.Shape = new CircleShape2D{Radius = InnerRadius};
+
+        HealthCollisionArea2D.AddChild(new CollisionShape2D{
+            Shape = CollisionShape2D.Shape
+        });
+
         Polygon2D.Polygon = points;
 
 
         // Initialize the health
         Health.NoHealthRemaining += OnNoHealthRemaining;
          
+        ApplyImpulse(Vector2.Zero, Velocity);
+    }
 
-        // Initialize the collision behaviour
-        KinematicBody2DBehaviour.Initialize(
-            collisionBehaviours: new Dictionary<string, CollisionBehaviour>(){
-                {
-                    "bullet",
-                    new CollisionBehaviour(
-                        onCollision: (node) =>{
-                            var damage = node.GetNode<Damage>("Damage");
-                            Health.TakeDamage(damage.Value);
-                        }
-                    )
+    /**
+    <summary>
+    Returns a list of fragments of the asteroid, inheriting a fraction of the properties of the original
+    </summary>
+    */
+    private IEnumerable<Asteroid> Fragmentate(){
+        List<Asteroid> fragments = new List<Asteroid>();
+        for(int i = 0; i < Fragmentation; i++){
+            var fragment = (Asteroid)GD.Load<PackedScene>("res://features/asteroid/Asteroid.tscn").Instance();
+            fragment.Initialize(
+                new AsteroidProps{
+                    InnerRadius = InnerRadius / Fragmentation,
+                    OuterRadius = OuterRadius / Fragmentation,
+                    VertexCount = VertexCount,
+                    Velocity = Velocity * Fragmentation,
+                    RotationSpeed = RotationSpeed * (Fragmentation / 2)
                 }
-            }
-        );
+            );
+            fragments.Add(fragment);
+        }
+
+        return fragments;
     }
     private void OnNoHealthRemaining(Node node){
+        Fragmentated?.Invoke(this, Fragmentate());       
+
         QueueFree();
     }
 
@@ -107,12 +130,15 @@ public class Asteroid : KinematicBody2D, IDangerGroup
         return points.ToArray();
     }
 
+    public override void _IntegrateForces(Physics2DDirectBodyState state){
+        ApplyTorqueImpulse(RotationSpeed);
+    }
+
+    public override void _Process(float delta)
+    {
+    }
+
     public override void _PhysicsProcess(float delta)
     {
-        Rotate(RotationSpeed * delta);
-
-        var collisionResult = MoveAndCollide(Velocity * delta);
-        if(collisionResult != null)
-            KinematicBody2DBehaviour?.Collides("bullet", collisionResult.Collider as Node);
     }
 }

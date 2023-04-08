@@ -43,7 +43,7 @@ class Health2DArea : Node{
 
     public void OnBodyEntered(Node body)
     {
-        var damage = body.GetNode<Damage>("Damage2DArea");
+        var damage = body.GetNodeOrNull<Damage>("DamageArea2D");
 
         if(damage != null && GroupsToTakeDamageFrom.Any(q=>damage.GetGroups().Contains(q))){
             Health.TakeDamage(damage.Value);

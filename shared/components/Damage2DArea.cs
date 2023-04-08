@@ -6,7 +6,7 @@ This class handles the damage part of the entity
 holds reference to both the Damage and Area2D components of the damage sender
 </summary>
 */
-class Damage2DArea : Area2D, IDangerGroup{
+class Damage2DArea : Node, IDangerGroup{
     [Export]
     public NodePath DamagePath{get; private set;}
     public Damage Damage{get; private set;}
