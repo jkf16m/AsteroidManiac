@@ -55,8 +55,6 @@ public class Bullet : KinematicBody2D, IInitialize<BulletProps>, IDestructible<N
     public override void _Ready()
     {
         Rotation = Direction;
-
-        AddToGroup("bullet");
     }
     public override void _PhysicsProcess(float delta)
     {

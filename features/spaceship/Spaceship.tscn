@@ -48,11 +48,11 @@ MaxHealth = 100
 Speed = 450.0
 Desacceleration = 250.0
 
-[node name="DamageReceiverArea2D" type="Area2D" parent="."]
+[node name="HealthDamageArea2D" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageReceiverArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HealthDamageArea2D"]
 shape = SubResource( 2 )
 
-[node name="DamageReceiverArea2D" parent="DamageReceiverArea2D" instance=ExtResource( 3 )]
+[node name="DamageReceiverArea2D" parent="HealthDamageArea2D" instance=ExtResource( 3 )]
 GroupsToTakeDamageFrom = PoolStringArray( "asteroid" )
 HealthPath = NodePath("../../Health")

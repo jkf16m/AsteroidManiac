@@ -39,7 +39,6 @@ public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
     public event FragmentatedDelegate Fragmentated;
 
     public override void _Ready(){
-        AddToGroup("asteroid");
         Initialize(
             new AsteroidProps{
                 InnerRadius = InnerRadius,
@@ -61,7 +60,7 @@ public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
         VertexCount = p.VertexCount ?? VertexCount;
         Health = GetNode<Health>("Health");
         Damage = GetNode<Damage>("Damage");
-        DamageSenderArea2D = GetNode<Area2D>("DamageSenderArea2D");
+        DamageSenderArea2D = GetNode<Area2D>("HealthAndDamageArea2D");
         Polygon2D = GetNode<Polygon2D>("Polygon2D");
         CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
 

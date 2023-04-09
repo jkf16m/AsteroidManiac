@@ -13,7 +13,7 @@ This component also defines the groups that this entity can take damage from.
 */
 public class DamageReceiverArea2D : Node, IComponent<Area2D>
 {
-    public Area2D Parent => this.GetParentOrNull<Area2D>();
+    public Area2D Parent {get; private set;}
 
     [Export]
     public string[] GroupsToTakeDamageFrom{get; private set;}
@@ -24,6 +24,7 @@ public class DamageReceiverArea2D : Node, IComponent<Area2D>
 
     public override void _Ready()
     {
+        Parent = this.GetParentOrNull<Area2D>();
         if(Parent == null)
             throw new Exception("This component must be a child of an Area2D node.");
 
@@ -40,7 +41,7 @@ public class DamageReceiverArea2D : Node, IComponent<Area2D>
         var damage = damageSenderArea2D?.Damage;
 
         if(damage != null
-            && GroupsToTakeDamageFrom.Any(q=>area.GetGroups().Contains(q))
+            && GroupsToTakeDamageFrom.Any(q=>damageSenderArea2D.GetGroups().Contains(q))
         ){
             Health.TakeDamage(damage.Value);
         }
