@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://shared/components/HealthAndDamage/Damage.tscn" type="PackedScene" id=1]
+[ext_resource path="res://shared/components/health_and_damage/Damage.tscn" type="PackedScene" id=1]
 [ext_resource path="res://features/bullet/Bullet.cs" type="Script" id=2]
-[ext_resource path="res://shared/components/Damage2DArea.tscn" type="PackedScene" id=3]
+[ext_resource path="res://shared/components/health_and_damage/Damage2DArea.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 7.69231
