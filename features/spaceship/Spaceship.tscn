@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://features/spaceship/Spaceship.cs" type="Script" id=1]
 [ext_resource path="res://shared/components/health_and_damage/Health.tscn" type="PackedScene" id=2]
-[ext_resource path="res://shared/components/health_and_damage/Health2DArea.tscn" type="PackedScene" id=3]
+[ext_resource path="res://shared/components/health_and_damage/Area2D_v2/DamageReceiverArea2D.tscn" type="PackedScene" id=3]
 [ext_resource path="res://features/bullet/inherited/PlayerBullet.tscn" type="PackedScene" id=4]
 [ext_resource path="res://features/shooter/Shooter.tscn" type="PackedScene" id=5]
+[ext_resource path="res://shared/components/keyboard/MovementControlRigidBody2D.tscn" type="PackedScene" id=6]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 4.0
@@ -14,12 +15,13 @@ radius = 12.0
 
 [node name="Spaceship" type="RigidBody2D"]
 mode = 2
+mass = 0.14
 gravity_scale = 0.0
 can_sleep = false
 script = ExtResource( 1 )
-MaxSpeed = 600.0
-Speed = 500
-Desacceleration = 100.0
+MaxSpeed = 500.0
+Speed = 450
+Desacceleration = 250.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -42,12 +44,15 @@ __meta__ = {
 Value = 100
 MaxHealth = 100
 
-[node name="Health2DArea" parent="." instance=ExtResource( 3 )]
-Area2DPath = NodePath("../HealthCollisionArea2D")
-HealthPath = NodePath("../Health")
-GroupsToTakeDamageFrom = PoolStringArray( "danger" )
+[node name="MovementControlRigidBody2D" parent="." instance=ExtResource( 6 )]
+Speed = 450.0
+Desacceleration = 250.0
 
-[node name="HealthCollisionArea2D" type="Area2D" parent="."]
+[node name="DamageReceiverArea2D" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HealthCollisionArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageReceiverArea2D"]
 shape = SubResource( 2 )
+
+[node name="DamageReceiverArea2D" parent="DamageReceiverArea2D" instance=ExtResource( 3 )]
+GroupsToTakeDamageFrom = PoolStringArray( "asteroid" )
+HealthPath = NodePath("../../Health")

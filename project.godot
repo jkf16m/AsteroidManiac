@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="Asteroid Maniac Game"
-run/main_scene="res://scenes/debug/room_2_player_shooting.tscn"
+run/main_scene="res://scenes/debug/room_5_player_shooting_asteroids.tscn"
 config/icon="res://icon.png"
 
 [gui]
@@ -43,6 +43,11 @@ spaceship_up={
 spaceship_shoot={
 "deadzone": 0.5,
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+debug_gui_toggle={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777246,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 

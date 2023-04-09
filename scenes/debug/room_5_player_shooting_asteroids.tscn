@@ -1,3 +1,30 @@
-[gd_scene format=2]
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://features/asteroid/Asteroid.tscn" type="PackedScene" id=1]
+[ext_resource path="res://features/spaceship/Spaceship.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/debug/room_5_player_shooting_asteroids.cs" type="Script" id=3]
+[ext_resource path="res://shared/components/debug/DebugGUI.tscn" type="PackedScene" id=4]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Spaceship" parent="." instance=ExtResource( 2 )]
+position = Vector2( 136, 192 )
+
+[node name="Asteroid" parent="." instance=ExtResource( 1 )]
+position = Vector2( 280, 400 )
+
+[node name="Asteroid2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 440, 312 )
+
+[node name="Asteroid3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 696, 184 )
+
+[node name="DebugControl" parent="." instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 1024.0
+margin_bottom = 112.0
+__meta__ = {
+"_edit_lock_": true
+}

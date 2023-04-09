@@ -17,13 +17,14 @@ public class DamageArgs{
 public class Health : Node
 {
     [Export]
-    public int Value {get; private set;}
+    public int Value {get; set;}
     [Export]
-    public int MaxHealth {get; private set;}
+    public int MaxHealth {get; set;}
 
 
     public event Action<DamageArgs> Damaged;
-    public event Action<Node> NoHealthRemaining;
+    public event Action NoHealthRemaining;
+    public event Action<int> Healed;
 
     public void Initialize(
         int? maxHealth = null,
@@ -46,9 +47,18 @@ public class Health : Node
     public void TakeDamage(int amount){
         Value -= amount;
         if(Value <= 0){
-            this.NoHealthRemaining?.Invoke(this);
+            this.NoHealthRemaining?.Invoke();
         }
 
         this.Damaged?.Invoke(new DamageArgs(amount, Value));
+    }
+
+    public void Heal(int amount){
+        Value += amount;
+        if(Value > MaxHealth){
+            Value = MaxHealth;
+        }
+
+        this.Healed?.Invoke(Value);
     }
 }

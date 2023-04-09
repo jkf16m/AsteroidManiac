@@ -35,10 +35,17 @@ public class Spaceship : RigidBody2D
 
    
 
+    public Health Health {get; private set;}
     public Shooter Shooter{get; private set;}
+    public MovementControlRigidBody2D MovementControlRigidBody2D{get; private set;}
     public override void _Ready()
     {
         Shooter = GetNode<Shooter>("Shooter");
+        Health = GetNode<Health>("Health");
+        MovementControlRigidBody2D = GetNode<MovementControlRigidBody2D>("MovementControlRigidBody2D");
+
+        Health.NoHealthRemaining += OnNoHealthRemaining;
+        Health.Damaged += OnDamaged;
     }
 
     
@@ -46,45 +53,7 @@ public class Spaceship : RigidBody2D
 
     public override void _IntegrateForces(Physics2DDirectBodyState state)
     {
-
-        Vector2 direction = new Vector2(0,0);
-        Vector2 desacceleration = new Vector2(0,0);
-        if(Input.IsActionPressed("spaceship_right")){
-            direction.x += 1;
-        }
-        if(Input.IsActionPressed("spaceship_left")){
-            direction.x -= 1;
-        }
-        if(Input.IsActionPressed("spaceship_up")){
-            direction.y -= 1;
-        }
-        if(Input.IsActionPressed("spaceship_down")){
-            direction.y += 1;
-        }
-        if(
-            !Input.IsActionPressed("spaceship_right") &&
-            !Input.IsActionPressed("spaceship_left") &&
-            !Input.IsActionPressed("spaceship_up") &&
-            !Input.IsActionPressed("spaceship_down")
-        ){
-            GD.Print("Applying Desacceleration: " + Desacceleration);
-            desacceleration = -state.LinearVelocity.Normalized() * Desacceleration;
-        }
-
-        if(desacceleration.Length() != 0){
-            AppliedForce = desacceleration;
-        }else{
-            AppliedForce = (direction.Normalized() * Speed);
-        }
-
-
-        // Limit the speed of the spaceship.
-        if (state.LinearVelocity.Length() > MaxSpeed)
-        {
-            state.LinearVelocity = state.LinearVelocity.Normalized() * MaxSpeed;
-        }else if(state.LinearVelocity.Length() < 0.1){
-            state.LinearVelocity = new Vector2(0,0);
-        }
+        MovementControlRigidBody2D.MoveRigidBody(this, state);
 
         RotateTowardsMouse();
     }
@@ -107,5 +76,17 @@ public class Spaceship : RigidBody2D
         this.QueueFree();
 
         return this;
+    }
+
+
+    public void OnNoHealthRemaining()
+    {
+        QueueFree();
+    }
+
+    public void OnDamaged(DamageArgs damage)
+    {
+        DebugService.Instance(this).Log("Spaceship was damaged by " + damage.Amount);
+        DebugService.Instance(this).Log("Spaceship has " + damage.Health + " health left.");
     }
 }

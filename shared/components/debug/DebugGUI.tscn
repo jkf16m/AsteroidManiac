@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://shared/components/debug/DebugGUI.cs" type="Script" id=1]
+
+[sub_resource type="Theme" id=1]
+
+[node name="DebugGUI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+Enabled = false
+
+[node name="Panel" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource( 1 )
+color = Color( 0.101961, 0.0980392, 0.0980392, 0.470588 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 24.0
+scroll_following = true

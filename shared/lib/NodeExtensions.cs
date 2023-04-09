@@ -35,4 +35,52 @@ public static class NodeExtensions{
     {
         return new GroupNode<T>(node, groupName);
     }
+
+    /**
+    <summary>
+    Tries to cast the node to the given type.
+    </summary>
+    */
+    public static T As<T>(this Node node) where T : Node{
+        return node as T;
+    }
+
+
+    /**
+    <summary>
+    Gets child node by the given type, matches the first one.
+    </summary>
+    */
+    public static T GetNodeByType<T>(this Node node) where T : Node{
+        var child = node.GetNodeByTypeOrNull<T>();
+
+        if(child == null)
+            throw new Exception($"Could not find a child node of type {typeof(T)}");
+
+        return child;
+    }
+
+    public static I GetNodeByType<T,I>(this Node node) where T : Node where I : Node{
+        var child = node.GetNodeByTypeOrNull<T>();
+
+        if(child == null)
+            throw new Exception($"Could not find a child node of type {typeof(T)}");
+
+        return child.As<I>();
+    }
+
+    /**
+    <summary>
+    Gets child node by the given type, matches the first one. Returns null if not found.
+    </summary>
+    */
+    public static T GetNodeByTypeOrNull<T>(this Node node) where T : Node{
+        var children = node.GetChildren();
+        foreach(var child in children){
+            if(child is T){
+                return child as T;
+            }
+        }
+        return null;
+    }
 }

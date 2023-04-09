@@ -32,7 +32,7 @@ public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
     public Polygon2D Polygon2D{get; private set;}
     public Health Health{get; private set;}
     public Damage Damage{get; private set;}
-    public Area2D HealthCollisionArea2D{get; private set;}
+    public Area2D DamageSenderArea2D{get; private set;}
 
 
     public delegate void FragmentatedDelegate(Asteroid destroyed, IEnumerable<Asteroid> fragments);
@@ -61,7 +61,7 @@ public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
         VertexCount = p.VertexCount ?? VertexCount;
         Health = GetNode<Health>("Health");
         Damage = GetNode<Damage>("Damage");
-        HealthCollisionArea2D = GetNode<Area2D>("HealthCollisionArea2D");
+        DamageSenderArea2D = GetNode<Area2D>("DamageSenderArea2D");
         Polygon2D = GetNode<Polygon2D>("Polygon2D");
         CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
 
@@ -70,9 +70,8 @@ public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
 
         CollisionShape2D.Shape = new CircleShape2D{Radius = InnerRadius};
 
-        HealthCollisionArea2D.AddChild(new CollisionShape2D{
-            Shape = CollisionShape2D.Shape
-        });
+        var damageSenderCollisionShape2D = DamageSenderArea2D.GetNode<CollisionShape2D>("CollisionShape2D");
+        damageSenderCollisionShape2D.Shape = new CircleShape2D{Radius = InnerRadius};
 
         Polygon2D.Polygon = points;
 
@@ -106,7 +105,7 @@ public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
 
         return fragments;
     }
-    private void OnNoHealthRemaining(Node node){
+    private void OnNoHealthRemaining(){
         Fragmentated?.Invoke(this, Fragmentate());       
 
         QueueFree();
