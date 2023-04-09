@@ -3,7 +3,7 @@
 [ext_resource path="res://features/spaceship/Spaceship.cs" type="Script" id=1]
 [ext_resource path="res://shared/components/Health.tscn" type="PackedScene" id=2]
 [ext_resource path="res://shared/components/Health2DArea.tscn" type="PackedScene" id=3]
-[ext_resource path="res://features/bullet/Bullet.tscn" type="PackedScene" id=4]
+[ext_resource path="res://features/bullet/inherited/PlayerBullet.tscn" type="PackedScene" id=4]
 [ext_resource path="res://features/shooter/Shooter.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
@@ -32,7 +32,7 @@ polygon = PoolVector2Array( -24, -24, 24, 0, -24, 24, -2, 0 )
 BulletScene = ExtResource( 4 )
 BulletSpeed = 500.0
 ShootDelaySeconds = 0.1
-MaxBulletSpeedOnDistance = 500.0
+MaxBulletSpeedOnDistance = 250.0
 ArcOfFireDegrees = 15.0
 
 [node name="Health" parent="." instance=ExtResource( 2 )]

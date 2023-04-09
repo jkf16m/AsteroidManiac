@@ -39,6 +39,7 @@ public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
     public event FragmentatedDelegate Fragmentated;
 
     public override void _Ready(){
+        AddToGroup("asteroid");
         Initialize(
             new AsteroidProps{
                 InnerRadius = InnerRadius,
@@ -119,7 +120,8 @@ public class Asteroid : RigidBody2D, IDangerGroup, IInitialize<AsteroidProps>
             var angle = Mathf.Deg2Rad(360f / VertexCount * i);
             point = point.Rotated(angle);
 
-            var radius = MathFunctions.RandomRange(InnerRadius, OuterRadius);
+            var random = new Random();
+            var radius = random.Next((int)Math.Round(InnerRadius,0), (int)Math.Round(OuterRadius,0));
 
             point *= radius;
 

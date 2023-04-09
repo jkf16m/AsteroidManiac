@@ -31,7 +31,8 @@ public static class NodeExtensions{
     This method returns a GroupNode with the given types.
     </summary>
     */
-    public static GroupNode<T, P> IntoGroupNode<T, P>(this T node, string groupName) where T : Node, P{
-        return new GroupNode<T, P>(node, groupName);
+    public static GroupNode<T> IntoGroupNode<T>(this T node, string groupName) where T : Node
+    {
+        return new GroupNode<T>(node, groupName);
     }
 }

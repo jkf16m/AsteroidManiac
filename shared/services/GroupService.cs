@@ -18,11 +18,16 @@ public class GroupService{
     }
 
 
-    public Group<IDangerGroup> DangerGroup{get; private set;}
-    public Group<IBonusGroup> BonusGroup{get; private set;}
+    public Group<Asteroid> AsteroidGroup{get; private set;}
+    public Group<Bullet> BulletGroup{get; private set;}
+    public Group<Bullet> PlayerBulletGroup{get; private set;}
+    public Group<Bullet> EnemyBulletGroup{get; private set;}
+    public Group<Node> BonusGroup{get; private set;}
 
     public GroupService(){
-        this.DangerGroup = new Group<IDangerGroup>("danger");
-        this.BonusGroup = new Group<IBonusGroup>("bonus");
+        this.AsteroidGroup = new Group<Asteroid>("asteroid");
+        this.BulletGroup = new Group<Bullet>("bullet");
+        this.PlayerBulletGroup = new Group<Bullet>("player_bullet");
+        this.EnemyBulletGroup = new Group<Bullet>("enemy_bullet");
     }
 }

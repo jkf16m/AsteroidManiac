@@ -23,7 +23,7 @@ var node = new Node();
 var groupNode = new GroupNode<Node, IDanger>(node, "danger");
 var damage = groupNode.Damage;
 */
-public class GroupNode<T, P> where T : Node, P{
+public class GroupNode<T> where T : Node{
     public T Node{get; private set;}
     public GroupNode(T node, string groupName){
         this.Node = node;

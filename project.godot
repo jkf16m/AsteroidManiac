@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="Asteroid Maniac Game"
-run/main_scene="res://scenes/debug/room_4_background_music.tscn"
+run/main_scene="res://scenes/debug/room_2_player_shooting.tscn"
 config/icon="res://icon.png"
 
 [gui]

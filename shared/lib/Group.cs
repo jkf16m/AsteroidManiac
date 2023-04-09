@@ -1,20 +1,28 @@
 using System;
 using Godot;
 using System.Collections.Generic;
-public class Group<P>{
+public class Group<T> where T: Node{
     public string GroupName{get; private set;}
     public Group(string groupName){
         this.GroupName = groupName;
     }
 
-    public GroupNode<T,P> ToGroupNode<T>(T node) where T : Node, P{
-        return new GroupNode<T, P>(node, this.GroupName);
+    public GroupNode<T> ToGroupNode(Node node){
+        return new GroupNode<T>((T)node, this.GroupName);
     }
 
-    public GroupNode<T,P> TryToGroupNode<T>(T node) where T : Node, P{
+    public GroupNode<T> TryToGroupNode(T node){
         if(node.IsInGroup(this.GroupName)){
-            return new GroupNode<T, P>(node, this.GroupName);
+            return new GroupNode<T>(node, this.GroupName);
         }
         return null;
+    }
+
+    public IEnumerable<GroupNode<T>> GetNodes(){
+        foreach(var node in new Node().GetTree().GetNodesInGroup(this.GroupName)){
+            if(node is T){
+                yield return new GroupNode<T>((T)node, this.GroupName);
+            }
+        }
     }
 }

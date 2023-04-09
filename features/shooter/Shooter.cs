@@ -39,7 +39,8 @@ public class Shooter : Node2D
 
     public void Shoot(float direction){
         if(ShouldShoot){
-            var bullet = BulletScene.Instance() as Bullet;
+            var bullet = BulletScene.Instance<Bullet>(); 
+
 
             bullet.Initialize(GlobalPosition, CalculateDirectionWithArcOfFire(direction), CalculateBulletSpeed());
 

@@ -1,5 +1,14 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+
+public struct BulletProps{
+    public Vector2 Position;
+    public float Direction;
+    public float Speed;
+    public int Damage;
+    public IEnumerable<string> DamageGroups;
+}
 
 /**
 <summary>
@@ -7,7 +16,7 @@ This is a class that represents a bullet.
 When the bullet collides with a solid object, it is self-destroyed.
 </summary>
 */
-public class Bullet : KinematicBody2D
+public class Bullet : KinematicBody2D, IInitialize<BulletProps>, IDestructible<Node>
 {
     // Declare member variables here. Examples:
     // private int a = 2;
@@ -22,12 +31,15 @@ public class Bullet : KinematicBody2D
     public float Direction {get; private set;}
     [Export]
     public int DamageValue {get; private set;}
+    [Export]
+    public IEnumerable<string> DamageGroups{get; private set;}
     public Damage Damage{get; private set;}
 
-
+    public void Initialize(BulletProps p){
+        Initialize(p.Position, p.Direction, p.Speed, p.Damage);
+        DamageGroups = p.DamageGroups;
+    }
     public void Initialize(Vector2? position = null, float? direction = null, float? speed = null, int? damage = null){
-        AddToGroup("bullet");
-
         Position = position ?? Position;
         Direction = direction ?? Direction;
         Speed = speed ?? Speed;
@@ -43,6 +55,8 @@ public class Bullet : KinematicBody2D
     public override void _Ready()
     {
         Rotation = Direction;
+
+        AddToGroup("bullet");
     }
     public override void _PhysicsProcess(float delta)
     {
@@ -54,14 +68,17 @@ public class Bullet : KinematicBody2D
         if(colliderNode == null){
             return;
         }
-        if(colliderNode.GetGroups().Contains("solid")){
-            QueueFree();
-        }
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    public Node Destroy()
+    {
+        QueueFree();
+        return null;
+    }
+
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  public override void _Process(float delta)
+    //  {
+    //      
+    //  }
 }
