@@ -1,9 +1,9 @@
 using Godot;
 using System;
 
-public class ScreenWarpArea2D : Node
+public class ScreenWarpArea2D : Node, IComponent<Area2D>
 {
-    private Area2D Parent => GetParentOrNull<Area2D>();
+    public Area2D Parent => GetParentOrNull<Area2D>();
     private CollisionShape2D _collisionShape2D;
     private RectangleShape2D _rectangleShape2D;
     public override void _Ready()

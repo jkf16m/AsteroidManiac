@@ -2,5 +2,5 @@
 
 [ext_resource path="res://shared/components/health_and_damage/Area2D_v2/DamageSenderArea2D.cs" type="Script" id=1]
 
-[node name="DamageSenderArea2D" type="Area2D"]
+[node name="DamageSenderArea2D" type="Node"]
 script = ExtResource( 1 )

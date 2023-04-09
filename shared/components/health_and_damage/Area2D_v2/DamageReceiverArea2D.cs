@@ -11,9 +11,9 @@ reduce the health of the entity.
 This component also defines the groups that this entity can take damage from.
 </summary>
 */
-public class DamageReceiverArea2D : Node
+public class DamageReceiverArea2D : Node, IComponent<Area2D>
 {
-    private Area2D ParentArea2D => this.GetParentOrNull<Area2D>();
+    public Area2D Parent => this.GetParentOrNull<Area2D>();
 
     [Export]
     public string[] GroupsToTakeDamageFrom{get; private set;}
@@ -24,18 +24,18 @@ public class DamageReceiverArea2D : Node
 
     public override void _Ready()
     {
-        if(ParentArea2D == null)
+        if(Parent == null)
             throw new Exception("This component must be a child of an Area2D node.");
 
         Health = GetNode<Health>(HealthPath);
         CollisionShape2D = this.GetNodeByTypeOrNull<CollisionShape2D>();
 
-        ParentArea2D.Connect("area_entered", this, nameof(OnAreaEntered));
+        Parent.Connect("area_entered", this, nameof(OnAreaEntered));
     }
 
     public void OnAreaEntered(Area2D area)
     {
-        var damageSenderArea2D = area.As<DamageSenderArea2D>();
+        var damageSenderArea2D = area.GetNodeByTypeOrNull<DamageSenderArea2D>();
 
         var damage = damageSenderArea2D?.Damage;
 
